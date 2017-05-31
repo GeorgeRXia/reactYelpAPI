@@ -3,7 +3,7 @@ class CreateBusinessesTable < ActiveRecord::Migration[5.1]
     create_table :businesses do |t|
       t.string :yelp_id
       t.string :name
-      t.integer :user_id
+      t.string :image_url
     end
   end
 end
