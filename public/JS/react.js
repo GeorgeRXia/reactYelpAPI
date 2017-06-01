@@ -226,27 +226,33 @@ return <div>{yelpInformation}</div>
 
 function InitMap(props) {
   var markers = props.favoritesMarker.map(function(marker){
-
     return {lat: parseFloat(marker.latitude), lng: parseFloat(marker.longitude)};
+  });
+  var names = props.favoritesMarker.map(function(business) {
+    return business.name
+  });
 
-  })
-  console.log(markers);
-
-    // var uluru = {lat: -25.363, lng: 131.044};
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 14,
       center: markers[0]
     });
-    markers.forEach(function(marker) {
-      new google.maps.Marker({
-        position: marker,
+    for (let k = 0; k < markers.length; k++) {
+
+      let infowindow = new google.maps.InfoWindow({
+        content: names[k]
+      });
+
+      let marker = new google.maps.Marker({
+        position: markers[k],
         map: map
       });
-    });
-    // var marker = new google.maps.Marker({
-    //   position: uluru,
-    //   map: map
-    // });
+
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+      
+    }
+
     return null;
 }
 
