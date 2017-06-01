@@ -35,6 +35,7 @@ class YelpMaster extends React.Component {
       <div>
         <button onClick={this.seeSearch}> Back To Search </button>
         <YelpFavorites favoriteList= {this.state.favorites} destroyFavorite={this.destroyFavorite}/>
+        <InitMap  favoritesMarker={this.state.favorites}/>
       </div>
 
     )
@@ -60,13 +61,17 @@ class YelpMaster extends React.Component {
     let favorited =  this.state.results[parseInt(index)];
     let nameFavorited = favorited.name;
     let yelpIdFavorited = favorited.id;
+    let longitude = favorited.location.coordinate.longitude;
+    let latitude = favorited.location.coordinate.latitude;
     console.log(nameFavorited, yelpIdFavorited);
     axios({
       method: "post",
       url: '/createfavorites',
       params: {
         yelp_id: yelpIdFavorited,
-        name: nameFavorited
+        name: nameFavorited,
+        longitude: longitude,
+        latitude: latitude
 
       }
 
@@ -82,7 +87,7 @@ class YelpMaster extends React.Component {
       let yelp_id = business.id;
       this.destroyFavorite(yelp_id);
   }
-
+//on favorite page
   destroyFavorite(yelp_id) {
 
     axios({
@@ -172,7 +177,6 @@ function YelpFavorites(props){
               <button onClick={handleDestroyFavorite} id={favorite.yelp_id}> Unfavorite</button>
             </div>
         )
-
     });
 
     function handleDestroyFavorite(event) {
@@ -215,10 +219,37 @@ function handleDestroyFavorite(event) {
 }
 
 
-
 return <div>{yelpInformation}</div>
 
 }
+
+
+function InitMap(props) {
+  var markers = props.favoritesMarker.map(function(marker){
+
+    return {lat: parseFloat(marker.latitude), lng: parseFloat(marker.longitude)};
+
+  })
+  console.log(markers);
+
+    // var uluru = {lat: -25.363, lng: 131.044};
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 14,
+      center: markers[0]
+    });
+    markers.forEach(function(marker) {
+      new google.maps.Marker({
+        position: marker,
+        map: map
+      });
+    });
+    // var marker = new google.maps.Marker({
+    //   position: uluru,
+    //   map: map
+    // });
+    return null;
+}
+
 
 
 

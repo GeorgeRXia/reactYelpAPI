@@ -31,7 +31,7 @@ end
 post "/createfavorites" do
 
 
-  business = Business.create(yelp_id: params[:yelp_id], name: params[:name])
+  business = Business.create(yelp_id: params[:yelp_id], name: params[:name], longitude: params[:longitude], latitude: params[:latitude])
   favorites = Favorite.create(user_id:session[:user_id], business_id: business.id )
 
 end

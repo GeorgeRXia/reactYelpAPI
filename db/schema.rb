@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170601145325) do
+ActiveRecord::Schema.define(version: 20170601203012) do
 
   create_table "businesses", force: :cascade do |t|
     t.string "yelp_id"
     t.string "name"
-    t.string "image_url"
+    t.decimal "latitude"
+    t.decimal "longitude"
   end
 
   create_table "favorites", force: :cascade do |t|
