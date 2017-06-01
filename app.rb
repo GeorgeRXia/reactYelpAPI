@@ -5,11 +5,10 @@ end
 
 get "/signup" do
 
-username = params[:username]
-password = params[:password]
-User.create(username: username, password: password)
-
-  redirect back
+    username = params[:username]
+    password = params[:password]
+    User.create(username: username, password: password)
+    # redirect "/search"
 end
 
 post "/login" do
@@ -33,17 +32,11 @@ post "/createfavorites" do
   Business.create(yelp_id: params[:yelp_id], name: params[:name])
   business_id = Business.last.id
   favorites = Favorite.create(user_id:session[:user_id], business_id: business_id )
-
-# redirect "/search"
 end
 
 post '/destroy_favorite' do
   business_id = Business.where(yelp_id: params[:yelp_id]).first.id
-  if favorite = Favorite.where(business_id: business_id, user_id: session[:user_id]).first
-    favorite.destroy
-  else
-    p 'error!!!!!!!!!!'
-  end
+  favorite = Favorite.where(business_id: business_id, user_id: session[:user_id]).first.destroy
 end
 
 get "/seeFavorites" do

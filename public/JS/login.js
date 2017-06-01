@@ -12,6 +12,7 @@ class SignUp extends React.Component {
   }
     render (){
       return (<div>
+
             <div>Sign Up</div>
             Username: <input onChange= {this.updateUserName}/>
             Password: <input onChange={this.updatePassword}/>
