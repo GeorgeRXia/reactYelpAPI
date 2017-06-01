@@ -10,6 +10,7 @@ class YelpMaster extends React.Component {
     this.searchAndSetState = this.searchAndSetState.bind(this)
     this.addToFavorites = this.addToFavorites.bind(this)
     this.destroyFavorite = this.destroyFavorite.bind(this)
+    this.destroyFavoriteBySearchResultIndex = this.destroyFavoriteBySearchResultIndex.bind(this)
     this.loadFavorites = this.loadFavorites.bind(this)
     this.seeFavorites = this.seeFavorites.bind(this)
     this.seeSearch = this.seeSearch.bind(this)
@@ -24,7 +25,7 @@ class YelpMaster extends React.Component {
       return(
         <div>
           <YelpSearch search={this.searchAndSetState} />
-          <YelpResults results = {this.state.results} addToFavorites={this.addToFavorites} destroyFavorite={this.destroyFavorite} currentFavorites={this.state.favorites}/>
+          <YelpResults results = {this.state.results} addToFavorites={this.addToFavorites} destroyFavorite={this.destroyFavoriteBySearchResultIndex} currentFavorites={this.state.favorites}/>
           <button onClick={this.seeFavorites}> See Favorites </button>
 
         </div>
@@ -33,7 +34,7 @@ class YelpMaster extends React.Component {
     return(
       <div>
         <button onClick={this.seeSearch}> Back To Search </button>
-    <YelpFavorites favoriteList= {this.state.favorites}/>
+        <YelpFavorites favoriteList= {this.state.favorites} destroyFavorite={this.destroyFavorite}/>
       </div>
 
     )
@@ -59,7 +60,7 @@ class YelpMaster extends React.Component {
     let favorited =  this.state.results[parseInt(index)];
     let nameFavorited = favorited.name;
     let yelpIdFavorited = favorited.id;
-
+    console.log(nameFavorited, yelpIdFavorited);
     axios({
       method: "post",
       url: '/createfavorites',
@@ -76,9 +77,13 @@ class YelpMaster extends React.Component {
 
   }
 
-  destroyFavorite(index) {
-    let business = this.state.results[index];
-    let yelp_id = business.id;
+  destroyFavoriteBySearchResultIndex(index) {
+      let business = this.state.results[index];
+      let yelp_id = business.id;
+      this.destroyFavorite(yelp_id);
+  }
+
+  destroyFavorite(yelp_id) {
 
     axios({
       method: 'post',
@@ -157,17 +162,24 @@ class YelpSearch extends React.Component{
 }
 
 function YelpFavorites(props){
-let favoriteList = props.favoriteList;
+    let favoriteList = props.favoriteList;
 
-favoriteList = favoriteList.map(function(favorite){
+    favoriteList = favoriteList.map(function(favorite){
 
-return(
-  <div>{favorite.name}</div>
-)
+        return(
+            <div>
+              <div>{favorite.name}</div>
+              <button onClick={handleDestroyFavorite} id={favorite.yelp_id}> Unfavorite</button>
+            </div>
+        )
 
-})
+    });
 
-return <div>{favoriteList} </div>
+    function handleDestroyFavorite(event) {
+      props.destroyFavorite(event.target.id)
+    }
+
+    return <div>{favoriteList} </div>
 
 }
 function YelpResults(props){

@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 20170601145325) do
   create_table "businesses", force: :cascade do |t|
     t.string "yelp_id"
     t.string "name"
+    t.string "image_url"
   end
 
   create_table "favorites", force: :cascade do |t|
