@@ -35,7 +35,10 @@ class YelpMaster extends React.Component {
       <div>
         <button onClick={this.seeSearch}> Back To Search </button>
         <YelpFavorites favoriteList= {this.state.favorites} destroyFavorite={this.destroyFavorite}/>
+
+
         <InitMap  favoritesMarker={this.state.favorites}/>
+
       </div>
 
     )
@@ -117,10 +120,13 @@ class YelpMaster extends React.Component {
 
   seeFavorites(){
     this.loadFavorites();
+      var appearMap = document.getElementById("map");
+      appearMap.style.display = "block";
     this.setState({view: "favorites"});
   }
   seeSearch(){
-
+    var removeMap = document.getElementById("map");
+    removeMap.style.display = "none";
     this.setState({view: "search"})
 
   }
@@ -250,7 +256,7 @@ function InitMap(props) {
       marker.addListener('click', function() {
         infowindow.open(map, marker);
       });
-      
+
     }
 
     return null;
