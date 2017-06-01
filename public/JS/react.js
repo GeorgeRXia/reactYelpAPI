@@ -28,12 +28,8 @@ class YelpMaster extends React.Component {
           <button onClick={this.seeFavorites}> See Favorites </button>
 
         </div>
-
       )
-
-
     }
-
     return(
       <div>
         <button onClick={this.seeSearch}> Back To Search </button>
@@ -41,8 +37,6 @@ class YelpMaster extends React.Component {
       </div>
 
     )
-
-
 
   }
   searchAndSetState(location, term){
