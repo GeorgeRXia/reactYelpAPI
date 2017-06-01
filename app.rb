@@ -35,3 +35,9 @@ get "/createfavorites" do
 
 redirect "/search"
 end
+
+
+get "/seeFavorites" do
+favoriteBusinesses = User.find(session[:user_id]).businesses
+favoriteBusinesses.to_json
+end

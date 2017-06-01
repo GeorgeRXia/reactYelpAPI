@@ -3,20 +3,40 @@ class YelpMaster extends React.Component {
     super(props);
     this.state = {
       results: [],
+      favorites: [],
+      view: "search"
 
     }
     this.searchAndSetState = this.searchAndSetState.bind(this)
     this.addToFavorites = this.addToFavorites.bind(this)
+    this.seeFavorites = this.seeFavorites.bind(this)
+    this.seeSearch = this.seeSearch.bind(this)
   }
   render(){
+
+
+    if (this.state.view === "search"){
+      return(
+        <div>
+          <YelpSearch search={this.searchAndSetState} />
+          <YelpResults results = {this.state.results} addToFavorites={this.addToFavorites}/>
+          <button onClick={this.seeFavorites}> See Favorites </button>
+
+        </div>
+
+      )
+
+
+    }
+
     return(
       <div>
-        <YelpSearch search={this.searchAndSetState} />
-        <YelpResults results = {this.state.results} addToFavorites={this.addToFavorites}/>
-
+        <button onClick={this.seeSearch}> Back To Search </button>
+    <YelpFavorites favoriteList= {this.state.favorites}/>
       </div>
 
     )
+
 
 
   }
@@ -29,7 +49,7 @@ class YelpMaster extends React.Component {
       }
 
     }).then(function(response){
-
+      console.log(response.data.businesses);
       this.setState({results: response.data.businesses})
 
     }.bind(this))
@@ -38,7 +58,7 @@ class YelpMaster extends React.Component {
   addToFavorites(index){
     let favorited =  this.state.results[parseInt(index)];
     let nameFavorited = favorited.name;
-    let yelpIdFavorited = favorited.yelp_id;
+    let yelpIdFavorited = favorited.id;
 
     axios.get("/createfavorites", {
       params: {
@@ -54,6 +74,26 @@ class YelpMaster extends React.Component {
     })
 
 
+
+  }
+  seeFavorites(){
+    this.setState({results:[], view: "favorites"})
+    axios.get("/seeFavorites",{
+      params: {
+
+      }
+
+
+    }).then(function(response){
+      console.log(response.data);
+      this.setState({favorites: response.data})
+
+    }.bind(this))
+
+  }
+  seeSearch(){
+
+    this.setState({view: "search"})
 
   }
 }
@@ -98,6 +138,20 @@ class YelpSearch extends React.Component{
 
 }
 
+function YelpFavorites(props){
+let favoriteList = props.favoriteList;
+
+favoriteList = favoriteList.map(function(favorite){
+
+return(
+  <div>{favorite.name}</div>
+)
+
+})
+
+return <div>{favoriteList} </div>
+
+}
 function YelpResults(props){
 let yelpInformation = props.results.map(function(result, index){
 
