@@ -28,12 +28,13 @@ get "/search" do
   erb :search
 end
 
-get "/createfavorites" do
-  Business.create(yelp_id: params[:yelp_id] , name: params[:name])
-  business_id = Business.last.id
-  Favorite.create(user_id:session[:user_id], business_id: business_id )
+post "/createfavorites" do
 
-redirect "/search"
+  Business.create(yelp_id: params[:yelp_id], name: params[:name])
+  business_id = Business.last.id
+  favorites = Favorite.create(user_id:session[:user_id], business_id: business_id )
+
+# redirect "/search"
 end
 
 

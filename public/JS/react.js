@@ -56,17 +56,19 @@ class YelpMaster extends React.Component {
 
   }
   addToFavorites(index){
+    console.log(index);
     let favorited =  this.state.results[parseInt(index)];
     let nameFavorited = favorited.name;
     let yelpIdFavorited = favorited.id;
 
-    axios.get("/createfavorites", {
+    axios({
+      method: "post",
+      url: '/createfavorites',
       params: {
         yelp_id: yelpIdFavorited,
         name: nameFavorited
 
       }
-
 
     }).then(function(response){
       console.log(response);
@@ -77,7 +79,7 @@ class YelpMaster extends React.Component {
 
   }
   seeFavorites(){
-    this.setState({results:[], view: "favorites"})
+    this.setState({view: "favorites"})
     axios.get("/seeFavorites",{
       params: {
 
