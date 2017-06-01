@@ -12,12 +12,26 @@ User.create(username: username, password: password)
   redirect back
 end
 
-post "/" do
+post "/login" do
 
+current_user= User.where(username:params[:username]).first
 
+if current_user.password === params[:password]
+   session[:user_id] =current_user.id;
+redirect "/search"
+end
+redirect back
 end
 
 get "/search" do
 
   erb :search
+end
+
+get "/createfavorites" do
+  Business.create(yelp_id: params[:yelp_id] , name: params[:name])
+  business_id = Business.last.id
+  Favorite.create(user_id:session[:user_id], business_id: business_id )
+
+redirect "/search"
 end

@@ -1,6 +1,6 @@
 class SignUp extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super()
     this.state = {
       username: "",
       password: ""
@@ -48,7 +48,35 @@ class SignUp extends React.Component {
     }
   }
 
-  
+  class Login extends React.Component {
+    constructor() {
+      super()
+      this.state = {
+        username:"",
+        password:""
+
+      }
+
+
+    }
+    render(){
+      return(
+      <div>
+        <div> Login </div>
+        <form action="/login" method= "post">
+        Username: <input name="username"/>
+        Password: <input name="password"/>
+        <input type= "submit"/>
+      </form>
+      </div>
+      )
+
+    }
+
+
+
+  }
 
 
 ReactDOM.render(<SignUp />, document.getElementById('signUp'))
+ReactDOM.render(<Login />, document.getElementById('signIn'))

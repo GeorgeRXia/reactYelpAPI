@@ -10,12 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170531211634) do
+ActiveRecord::Schema.define(version: 20170601145325) do
 
   create_table "businesses", force: :cascade do |t|
     t.string "yelp_id"
     t.string "name"
-    t.integer "user_id"
   end
 
   create_table "favorites", force: :cascade do |t|
