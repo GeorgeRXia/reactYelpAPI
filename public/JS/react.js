@@ -9,8 +9,13 @@ class YelpMaster extends React.Component {
     }
     this.searchAndSetState = this.searchAndSetState.bind(this)
     this.addToFavorites = this.addToFavorites.bind(this)
+    this.destroyFavorite = this.destroyFavorite.bind(this)
+    this.loadFavorites = this.loadFavorites.bind(this)
     this.seeFavorites = this.seeFavorites.bind(this)
     this.seeSearch = this.seeSearch.bind(this)
+
+    this.loadFavorites();
+    console.log(this.state.favorites);
   }
   render(){
 
@@ -19,7 +24,7 @@ class YelpMaster extends React.Component {
       return(
         <div>
           <YelpSearch search={this.searchAndSetState} />
-          <YelpResults results = {this.state.results} addToFavorites={this.addToFavorites}/>
+          <YelpResults results = {this.state.results} addToFavorites={this.addToFavorites} destroyFavorite={this.destroyFavorite} currentFavorites={this.state.favorites}/>
           <button onClick={this.seeFavorites}> See Favorites </button>
 
         </div>
@@ -72,26 +77,43 @@ class YelpMaster extends React.Component {
 
     }).then(function(response){
       console.log(response);
-
-    })
-
-
+      this.loadFavorites();
+    }.bind(this))
 
   }
-  seeFavorites(){
-    this.setState({view: "favorites"})
+
+  destroyFavorite(index) {
+    let business = this.state.results[index];
+    let yelp_id = business.id;
+
+    axios({
+      method: 'post',
+      url: '/destroy_favorite',
+      params: {
+        yelp_id: yelp_id
+      }
+    }).then(function(response) {
+      console.log(response);
+      this.loadFavorites();
+    }.bind(this));
+  }
+
+  loadFavorites() {
     axios.get("/seeFavorites",{
       params: {
 
       }
 
-
     }).then(function(response){
       console.log(response.data);
       this.setState({favorites: response.data})
 
-    }.bind(this))
+    }.bind(this));
+  }
 
+  seeFavorites(){
+    this.loadFavorites();
+    this.setState({view: "favorites"});
   }
   seeSearch(){
 
@@ -155,18 +177,35 @@ return <div>{favoriteList} </div>
 
 }
 function YelpResults(props){
-let yelpInformation = props.results.map(function(result, index){
+  let favYelpIds = props.currentFavorites.map(function(favorite) {
+     return favorite.yelp_id;
+   });
 
-  return(
-      <div key={index} >
-     <div >{result.name} </div>
-     <button onClick={handleCreateFavorite} id={index}> Favorite It </button>
-   </div>
-   )
-})
+  let yelpInformation = props.results.map(function(result, index){
+    if (favYelpIds.includes(result.id)) {
+      return(
+        <div key={index} >
+         <div >{result.name} </div>
+         <button onClick={handleDestroyFavorite} id={index}> Unfavorite</button>
+       </div>
+     )
+    } else {
+
+      return(
+        <div key={index} >
+         <div >{result.name} </div>
+         <button onClick={handleCreateFavorite} id={index}> Favorite It </button>
+       </div>
+     )
+    }
+  })
 function handleCreateFavorite(event){
   props.addToFavorites(event.target.id)
 
+}
+
+function handleDestroyFavorite(event) {
+  props.destroyFavorite(event.target.id)
 }
 
 

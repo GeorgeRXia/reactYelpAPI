@@ -37,6 +37,14 @@ post "/createfavorites" do
 # redirect "/search"
 end
 
+post '/destroy_favorite' do
+  business_id = Business.where(yelp_id: params[:yelp_id]).first.id
+  if favorite = Favorite.where(business_id: business_id, user_id: session[:user_id]).first
+    favorite.destroy
+  else
+    p 'error!!!!!!!!!!'
+  end
+end
 
 get "/seeFavorites" do
 favoriteBusinesses = User.find(session[:user_id]).businesses
