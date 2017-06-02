@@ -37,10 +37,10 @@ post "/createfavorites" do
 end
 
 post '/destroy_favorite' do
+
   business_id = Business.where(yelp_id: params[:yelp_id]).first.id
-
   favorite = Favorite.where(business_id: business_id, user_id: session[:user_id]).first.destroy
-
+  business = Business.where(yelp_id: params[:yelp_id]).first.destroy
 end
 
 get "/seeFavorites" do

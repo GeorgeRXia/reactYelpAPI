@@ -35,8 +35,6 @@ class YelpMaster extends React.Component {
       <div>
         <button onClick={this.seeSearch}> Back To Search </button>
         <YelpFavorites favoriteList= {this.state.favorites} destroyFavorite={this.destroyFavorite}/>
-
-
         <InitMap  favoritesMarker={this.state.favorites}/>
 
       </div>
@@ -112,7 +110,7 @@ class YelpMaster extends React.Component {
       }
 
     }).then(function(response){
-      console.log(response.data);
+
       this.setState({favorites: response.data})
 
     }.bind(this));
